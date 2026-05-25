@@ -88,7 +88,7 @@ const TEMPLATES: Template[] = [
       { x: 81, y: 121, w: 500, h: 670 },
       { x: 81, y: 820, w: 500, h: 670 },
       { x: 619, y: 121, w: 500, h: 670 },
-      { x: 619, y: 121, w: 500, h: 670 },
+      { x: 619, y: 820, w: 500, h: 670 },
     ],
     shootLayout: { layoutKey: 'bk03', captureW: 500, captureH: 670, displayW: 500, displayH: 670, previewScale: 1.42 },
   },
@@ -447,21 +447,26 @@ export function usePhotobooth() {
         const slot = synthesisSlots[i]
         if (url === undefined || url === '' || slot === undefined) continue
         const img = await loadImg(url)
-        ctx.save()
-        ctx.filter = filterCss
-        // 填滿框、裁切溢出（object-fit: cover），與預覽一致
         const scale = Math.max(slot.w / img.naturalWidth, slot.h / img.naturalHeight)
         const drawW = img.naturalWidth * scale
         const drawH = img.naturalHeight * scale
         const dx = slot.x + (slot.w - drawW) / 2
         const dy = slot.y + (slot.h - drawH) / 2
+        ctx.save()
+        ctx.beginPath()
+        ctx.rect(slot.x, slot.y, slot.w, slot.h)
+        ctx.clip()
+        ctx.filter = filterCss
+        // 填滿框（object-fit: cover）；clip 避免溢出蓋到相鄰格
         ctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight, dx, dy, drawW, drawH)
         const balance = getColorBalanceForFilter(selectedFilter.value)
         if (balance) {
-          const sx = Math.round(dx)
-          const sy = Math.round(dy)
-          const sw = Math.max(1, Math.round(drawW))
-          const sh = Math.max(1, Math.round(drawH))
+          const sx = Math.max(slot.x, Math.round(dx))
+          const sy = Math.max(slot.y, Math.round(dy))
+          const ex = Math.min(slot.x + slot.w, Math.round(dx + drawW))
+          const ey = Math.min(slot.y + slot.h, Math.round(dy + drawH))
+          const sw = Math.max(1, ex - sx)
+          const sh = Math.max(1, ey - sy)
           const imageData = ctx.getImageData(sx, sy, sw, sh)
           applyColorBalance(imageData, balance.deltaR, balance.deltaG, balance.deltaB)
           ctx.putImageData(imageData, sx, sy)
