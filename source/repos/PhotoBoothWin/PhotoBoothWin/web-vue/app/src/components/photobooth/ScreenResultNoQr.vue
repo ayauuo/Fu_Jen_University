@@ -216,7 +216,6 @@ async function onPrint() {
         <button type="button" class="btn-action btn-print" @click="onPrint">
           <img src="/assets/templates/NoQRcodePage/printbutton.png" alt="列印" />
         </button>
-        <div class="btns-row__balance" aria-hidden="true" />
       </div>
     </div>
   </div>
@@ -258,6 +257,7 @@ async function onPrint() {
   justify-content: center;
   width: 100%;
   min-width: 0;
+  margin-top: clamp(40px, 6vh, 80px);
 
   img {
     max-width: 88%;
@@ -276,30 +276,24 @@ async function onPrint() {
 }
 
 .btns-row {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
   align-items: center;
-  width: 100%;
+  justify-content: space-between;
+  gap: $spacing-3xl;
+  width: auto;
   max-width: min(900px, 85vw);
-  margin: 0 auto;
+  align-self: flex-end;
+  margin-left: auto;
+  margin-right: 0;
+  transform: translateX(350px);
 }
 
 .btn-cancel {
-  grid-column: 1;
-  justify-self: start;
+  flex-shrink: 0;
 }
 
 .btn-print {
-  grid-column: 2;
-  justify-self: center;
-}
-
-.btns-row__balance {
-  grid-column: 3;
-  /* 與左欄等寬，讓「列印」落在中軸而非兩顆按鈕的中間 */
-  visibility: hidden;
-  pointer-events: none;
-  min-height: 1px;
+  flex-shrink: 0;
 }
 
 .btn-action {

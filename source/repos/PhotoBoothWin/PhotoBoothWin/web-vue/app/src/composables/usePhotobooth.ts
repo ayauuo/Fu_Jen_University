@@ -61,13 +61,13 @@ const TEMPLATES: Template[] = [
     width: 1795,  /* 最後合成圖寬度 */
     height: 1205, /* 最後合成圖高度 */
     slots: [
-      { x: 96, y: 190, w: 500, h: 500 },
+      { x: 96, y: 190, w: 1600, h: 900 },
     ],
     shootLayout: {
       layoutKey: 'bk02',
       captureW: 500,
       captureH: 500,
-      previewScale: 1.8,
+      previewScale: 2.5,
       /** 橫向大框：預覽區等比縮小（寬高同乘，避免框圖 contain 出現上下黑邊） */
       previewWidthScale: 0.8,
     },
